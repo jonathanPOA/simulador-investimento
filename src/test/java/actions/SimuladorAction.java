@@ -9,12 +9,20 @@ public class SimuladorAction {
 
     private SimuladorPage simuladorPage = new SimuladorPage();
 
-    public void realizarSimulacao(String valor_aplicacao, String valor_poupar, String meses){
+    public void realizarSimulacao(String valor_aplicacao, String valor_poupar, String tempo, String unidade){
         simuladorPage.preencheCampoValorAplicar(valor_aplicacao);
         simuladorPage.preencheCampoQuantoInvestirPorMes(valor_poupar);
-        simuladorPage.preencheCampoQuantoTempoPoupar(meses);
+        simuladorPage.preencheCampoQuantoTempoPoupar(tempo);
+        simuladorPage.selecionaUnidadeTempo(unidade);
         simuladorPage.clicaBotaoSimular();
 
+    }
+
+    public boolean validarApresentacaoValorGuardado(String valor){
+        if (simuladorPage.aguardaResultadoSimulacao()) {
+            return simuladorPage.retornaValorGuardado().equalsIgnoreCase(valor);
+        }
+        return false;
     }
 
     public boolean validarApresentacaoTabelaResultados(){
