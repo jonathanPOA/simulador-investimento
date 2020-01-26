@@ -1,0 +1,122 @@
+plugins {
+    id 'java'
+}
+
+group 'sicredi'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 11
+targetCompatibility = 11
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'info.cukes', name: 'cucumber-java', version: '1.2.6'
+    compile group: 'info.cukes', name: 'cucumber-core', version: '1.2.6'
+
+    testCompile group: 'io.cucumber', name: 'cucumber-junit', version: '1.2.6'
+    testCompile group: 'info.cukes', name: 'cucumber-picocontainer', version: '1.2.6'
+
+    compile group: 'com.paulhammant', name: 'ngwebdriver', version: '1.1.2'
+
+    compile 'org.slf4j:slf4j-api:1.7.21'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.7'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.7'
+
+    // https://mvnrepository.com/artifact/log4j/log4j
+    compile group: 'log4j', name: 'log4j', version: '1.2.17'
+
+    compile group: 'org.json', name: 'json', version: '20190722'
+
+    compile "org.jtwig:jtwig-core:5.87.0.RELEASE"
+    /* Selenium */
+    //compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.8.1'
+
+    /* NGWebDriver*/
+    // https://mvnrepository.com/artifact/com.paulhammant/ngwebdriver
+    compile group: 'com.paulhammant', name: 'ngwebdriver', version: '1.1.2'
+
+    /* JDBC DRIVERS */
+
+    compile group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '6.1.0.jre8'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+    compile group: 'org.postgresql', name: 'postgresql', version: '9.3-1100-jdbc4'
+    compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.10.1'
+
+
+    compile group: 'io.cucumber', name: 'cucumber-java', version: '1.2.6'
+    // https://mvnrepository.com/artifact/info.cukes/cucumber-junit
+    testCompile group: 'io.cucumber', name: 'cucumber-junit', version: '1.2.6'
+
+    // https://mvnrepository.com/artifact/info.cukes/cucumber-picocontainer
+    testCompile group: 'info.cukes', name: 'cucumber-picocontainer', version: '1.2.6'
+
+
+    // https://mvnrepository.com/artifact/info.cukes/cucumber-testng
+    compile group: 'info.cukes', name: 'cucumber-testng', version: '1.2.6'
+
+    compile group: 'info.cukes', name: 'cucumber-core', version: '1.2.6'
+
+    //  compile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
+
+    // https://mvnrepository.com/artifact/org.testng/testng
+    testCompile group: 'org.testng', name: 'testng', version: '6.10'
+
+    // https://mvnrepository.com/artifact/com.aventstack/extentreports
+    //  compile group: 'com.aventstack', name: 'extentreports', version: '3.1.5'
+    compile group: 'com.aventstack', name: 'extentreports', version: '4.0.9'
+
+    compile group: 'com.github.javafaker', name: 'javafaker', version: '0.17.2'
+    compile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.0'
+
+
+    // https://mvnrepository.com/artifact/com.aventstack/extentreports
+    //  compile group: 'com.aventstack', name: 'extentreports', version: '3.1.5'
+    compile group: 'com.aventstack', name: 'extentreports', version: '4.0.9'
+
+}
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
+}
+
+
+compileJava.options.encoding = 'UTF-8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+wrapper {
+    gradleVersion = '5.0' // version required
+}
+
+task cucumber() {
+    dependsOn assemble, compileTestJava
+    doLast {
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty', '--glue', 'gradle.cucumber', 'src/main/java/']
+        }
+    }
+}
+
+
+test {
+    dependsOn cleanTest
+    doLast {
+        javaexec {
+            main = "cucumber.api.cli.Main"
+            classpath = configurations.testRuntimeClasspath + sourceSets.main.output + sourceSets.test.output
+            systemProperty "cucumber.options", System.getProperty("cucumber")
+            args = ['--plugin', 'listeners.Listener', '--plugin', 'json:build/cucumber-report/cucumber.json', '--glue', 'stepdef', 'src/test/resources']
+        }
+    }
+}
