@@ -28,7 +28,7 @@ public class SimuladorPage extends SimuladorPageElements {
     }
 
     /**
-     * Preenche o campo 'Qual o valor que você quer aplicar?'
+     * Preenche o campo 'Quanto você quer poupar to do mês?'
      * @param texto: o conteúdo que deve ser preenchido no campo
      */
     public void preencheCampoQuantoInvestirPorMes(String texto){
@@ -38,7 +38,7 @@ public class SimuladorPage extends SimuladorPageElements {
     }
 
     /**
-     * Preenche o campo 'Qual o valor que você quer aplicar?'
+     * Preenche o campo 'Por quanto tempo você quer poupar?'
      * @param texto: o conteúdo que deve ser preenchido no campo
      */
     public void preencheCampoQuantoTempoPoupar(String texto){
@@ -48,14 +48,30 @@ public class SimuladorPage extends SimuladorPageElements {
     }
 
     /**
-     * Preenche o campo 'Qual o valor que você quer aplicar?'
+     * Seleciona a unidade de medida de tempo que será utilizada na simulação
+     * @param opcao: a opção que deve ser selecionada. (Meses ou Anos)
+     */
+    public void selecionaUnidadeTempo(String opcao){
+        BOTAO_UNIDADE_TEMPO.click();
+        SeleniumUtils.aguardaElementoClicavel(OPCAO_ANOS, 2);
+        if(opcao.equalsIgnoreCase("Meses")){
+            OPCAO_MESES.click();
+        }else{
+            OPCAO_ANOS.click();
+        }
+
+    }
+
+    /**
+     * Clica no botão 'Simular'
      */
     public void clicaBotaoSimular(){
         BOTAO_SIMULAR.click();
     }
 
     /**
-     * Preenche o campo 'Qual o valor que você quer aplicar?'
+     * Retorna as opções de investimento apresentadas
+     * @return Uma lista de opções de Investimento
      */
     public List<OpcaoInvestimento> retornaLinhasTabelaResultados(){
         List<OpcaoInvestimento> listaOpcoesInvestimento = new ArrayList<>();
@@ -67,26 +83,11 @@ public class SimuladorPage extends SimuladorPageElements {
     }
 
     /**
-     * Preenche o campo 'Qual o valor que você quer aplicar?'
-     */
-    public boolean aguardaResultadoSimulacao(){
-        return SeleniumUtils.aguardaElementoClicavel(BOTAO_REFAZER_SIMULACAO, 5);
-    }
-
-    /**
      * Retorna o texto do label de erro do elemento 'Qual o valor que você quer aplicar?'
      * @return o texto do elemento
      */
     public String retornaTextoLabelErroValorAplicar(){
         return LABEL_ERRO_VALOR_APLICACAO.getText();
-    }
-
-    /**
-     * Retorna se o label de erro do elemento 'Qual o valor que você quer aplicar?' foi apresentado
-     * @return se o elemento está sendo apresentado
-     */
-    public boolean labelErroValorAplicarEstaVisivel(){
-        return LABEL_ERRO_VALOR_APLICACAO.isDisplayed();
     }
 
     /**
@@ -98,19 +99,43 @@ public class SimuladorPage extends SimuladorPageElements {
     }
 
     /**
-     * Retorna se o label de erro do elemento 'Quanto você quer poupar to.do mês?' foi apresentado
-     * @return se o elemento está sendo apresentado
-     */
-    public boolean labelErroValorPouparEstaVisivel(){
-        return LABEL_ERRO_VALOR_INVESTIR.isDisplayed();
-    }
-
-    /**
      * Retorna o texto do label de erro do elemento 'Por quanto tempo você quer poupar?'
      * @return o texto do elemento
      */
     public String retornaTextoLabelErroTempo(){
         return LABEL_ERRO_TEMPO.getText();
+    }
+
+    /**
+     * Retorna o texto do label do valor guardado
+     * @return o texto do elemento
+     */
+    public String retornaValorGuardado(){
+        return LABEL_VALOR_GUARDADO.getText();
+    }
+
+    /**
+     * Aguarda o resultado da simulação por 5 segundos
+     * @return true se o resultado da simulação foi apresentado, false caso contrário
+     */
+    public boolean aguardaResultadoSimulacao(){
+        return SeleniumUtils.aguardaElementoClicavel(BOTAO_REFAZER_SIMULACAO, 5);
+    }
+
+    /**
+     * Retorna se o label de erro do elemento 'Qual o valor que você quer aplicar?' foi apresentado
+     * @return se o elemento está sendo apresentado
+     */
+    public boolean labelErroValorAplicarEstaVisivel(){
+        return LABEL_ERRO_VALOR_APLICACAO.isDisplayed();
+    }
+
+    /**
+     * Retorna se o label de erro do elemento 'Quanto você quer poupar to.do mês?' foi apresentado
+     * @return se o elemento está sendo apresentado
+     */
+    public boolean labelErroValorPouparEstaVisivel(){
+        return LABEL_ERRO_VALOR_INVESTIR.isDisplayed();
     }
 
     /**
@@ -120,6 +145,7 @@ public class SimuladorPage extends SimuladorPageElements {
     public boolean labelErroTempoEstaVisivel(){
         return LABEL_ERRO_TEMPO.isDisplayed();
     }
+
 
 
 }
